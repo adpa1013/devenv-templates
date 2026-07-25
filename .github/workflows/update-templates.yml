@@ -1,0 +1,48 @@
+name: Daily Devenv Lockfile Update
+
+on:
+  schedule:
+    - cron: '0 4 * * *' # Runs daily at 04:00 UTC
+  workflow_dispatch:
+
+jobs:
+  update-lockfiles:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v31
+
+      - name: Setup Cachix for Devenv
+        uses: cachix/cachix-action@v16
+        with:
+          name: devenv
+
+      - name: Install devenv CLI
+        run: nix profile install nixpkgs#devenv
+
+      - name: Run devenv update across all templates
+        run: |
+          for dir in templates/*; do
+            if [ -d "$dir" ]; then
+              echo "Updating $dir..."
+              (cd "$dir" && devenv update)
+            fi
+          done
+
+      - name: Commit & Push updated lockfiles
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add templates/*/devenv.lock
+          if ! git diff --staged --quiet; then
+            git commit -m "chore(deps): daily devenv.lock update"
+            git push
+          else
+            echo "No lockfile changes detected."
+          fi
