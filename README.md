@@ -47,6 +47,11 @@ nix flake init -t github:adpa1013/devenv-templates#rust
 | `astro` | Astro | Node.js 20, pnpm, `astro-language-server` |
 | `typescript` | TypeScript / Node | Node.js 20, pnpm, `ts-node` |
 
+### 📱 Mobile & Cross-Platform
+| Template | Description | Key Tools |
+| --- | --- | --- |
+| `flutter` | Flutter & Dart | Flutter, Dart, Android SDK, JDK 17 |
+
 ### 🔵 Systems & General Purpose Languages
 | Template | Description | Key Tools |
 | --- | --- | --- |

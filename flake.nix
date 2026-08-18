@@ -193,6 +193,11 @@
           description = "SQL database development environment.";
         };
 
+        flutter = {
+          path = ./templates/flutter;
+          description = "Flutter development environment.";
+        };
+
         default = self.templates.blank;
       };
     };
